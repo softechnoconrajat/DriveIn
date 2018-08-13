@@ -208,7 +208,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.contentMode = .scaleAspectFit
-        label.text = "0"
+        label.text = "0 : 0"
         return label
     }()
 
@@ -232,16 +232,16 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
    
     
     
-    
-    let pressHere : UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Restaurants", for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-       // button.addTarget(self, action: #selector(pressNow), for: .touchUpInside)
-        button.backgroundColor = UIColor.black
-        return button
-    }()
+//
+//    let pressHere : UIButton = {
+//        let button = UIButton(type: .system)
+//        button.setTitle("Restaurants", for: .normal)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//       // button.addTarget(self, action: #selector(pressNow), for: .touchUpInside)
+//        button.backgroundColor = UIColor.black
+//        return button
+//    }()
     
     
     
@@ -325,7 +325,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
 }//End of average Performance
     
-    
+    // update Time for the timer
     
     func orderqueue(orderQueue: Array<Int>)  {
         
@@ -608,30 +608,30 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 //
         dayTimeLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 10).isActive = true
         dayTimeLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 85).isActive = true
-        dayTimeLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -105).isActive = true
+        dayTimeLabel.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -10).isActive = true
        
         dayTimeLabel.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.9).isActive = true
         dayTimeLabel.textAlignment = .center
-        dayTimeLabel.font = UIFont(name: "Aerial", size: 12.0)
+        dayTimeLabel.font = UIFont(name: "Arial", size: 18.0)
         dayTimeLabel.textColor = UIColor.white
         
-//       // label.font = UIFont.boldSystemFontOfSize(16.0)
+       // label.font = UIFont.boldSystemFontOfSize(16.0)
         
-        dayTimeLabel.font = UIFont.boldSystemFont(ofSize: 14.5)
+        //dayTimeLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
         
 //        dayTimeLabel.shadowOffset = CGSize(width: 2, height: 4)
 //        dayTimeLabel.shadowColor = UIColor.red
 ////
         
         
-        
-        // Button "Press Here" inside header container
-        
-        headerView.addSubview(pressHere)
-        pressHere.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 25).isActive = true
-        pressHere.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 280).isActive = true
-        pressHere.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -2).isActive = true
-        pressHere.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.5).isActive = true
+//
+//        // Button "Press Here" inside header container
+//
+//        headerView.addSubview(pressHere)
+//        pressHere.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 25).isActive = true
+//        pressHere.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 280).isActive = true
+//        pressHere.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -2).isActive = true
+//        pressHere.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.5).isActive = true
     
         
        
@@ -898,10 +898,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         button.setTitle("Resturents", for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        button.topAnchor.constraint(equalTo: orderView.topAnchor, constant: 0).isActive = true
+        button.topAnchor.constraint(equalTo: orderView.topAnchor, constant: 5).isActive = true
         button.leadingAnchor.constraint(equalTo: orderView.leadingAnchor, constant: 240).isActive = true
         button.trailingAnchor.constraint(equalTo: orderView.trailingAnchor, constant: -5).isActive = true
-        button.heightAnchor.constraint(equalTo: orderView.heightAnchor, multiplier: 0.2).isActive = true
+        button.heightAnchor.constraint(equalTo: orderView.heightAnchor, multiplier: 0.22).isActive = true
         
         
         // for tableView
@@ -920,7 +920,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }//End of setupLayout function
     
     
-    // function pressDrop
+    
+    
+// function pressDrop
     @objc func pressDrop(){
         if flag == 0 {
             // hide so height 0
@@ -937,7 +939,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             //show
             UIView.animate(withDuration: 0.1){
                 
-                self.tableViews.frame = CGRect(x: self.button.frame.origin.x, y: self.button.frame.origin.y + self.button.frame.height, width: self.button.frame.width, height: 150)
+                self.tableViews.frame = CGRect(x: self.button.frame.origin.x, y: self.button.frame.origin.y + self.button.frame.height, width: self.button.frame.width, height: 100)
                 self.tableViews.isHidden = false
                 
                 // set flag to 1

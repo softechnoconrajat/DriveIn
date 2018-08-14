@@ -328,14 +328,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     // update Time for the timer
     
    
-    
     func orderqueue(orderQueue: Array<Int>)  {
         
         let oQ : Array<Int>
         oQ = orderQueue
     
         if oQ.isEmpty == false{
-           vT.updateTime(label: orderTimer1, time: oQ[0], status: 1)
+           vT.startTimer( orderTimer1, oQ[0], 1)
            
             
         }
@@ -348,7 +347,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     
-    func deliveryQueue (deliveryQueue: Array<Int>) {
+    func deliveryQueue(deliveryQueue: Array<Int>) {
         
             let dQ : Array<Int>
             dQ = deliveryQueue
@@ -356,7 +355,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if dQ.isEmpty == false{
                 if dQ.count == 1 {
                     
-                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
+                    vT.startTimer( deliveryTimer1, dQ[0],  2)
                     
                     self.vT.hide(label: self.deliveryTimer2)
                     self.vT.hide(label: self.deliveryTimer3)
@@ -364,8 +363,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                 }
                 else if dQ.count == 2 {
-                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                    vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
+                    vT.startTimer(deliveryTimer1,  dQ[0], 2)
+                    vT.startTimer( deliveryTimer2, dQ[1], 2)
                     
                     
                     self.vT.hide(label: self.deliveryTimer3)
@@ -373,19 +372,19 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                     
                 }
                 else if dQ.count == 3 {
-                                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                                    vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
-                                    vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
+                                    vT.startTimer( deliveryTimer1,  dQ[0],  2)
+                                    vT.startTimer( deliveryTimer2,  dQ[1],  2)
+                                    vT.startTimer( deliveryTimer3,  dQ[2],  2)
                     
                     
                     self.vT.hide(label: self.deliveryTimer4)
                     
                 }
                 else {
-                                      vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                                      vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
-                                      vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
-                                      vT.updateTime(label: deliveryTimer3, time: dQ[3], status: 2)
+                                      vT.startTimer( deliveryTimer1,  dQ[0],  2)
+                                      vT.startTimer( deliveryTimer2,  dQ[1], 2)
+                                      vT.startTimer(deliveryTimer3,  dQ[2],  2)
+                                      vT.startTimer( deliveryTimer3,  dQ[3], 2)
                     
                 }
             }
@@ -538,7 +537,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         screenHeight = screenSize.height
         
         self.setupLayout()
-        self.expectedTime()
+       // self.expectedTime()
         
       //  mqttCall()
         
@@ -577,7 +576,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
          logo.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -290).isActive = true
          logo.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.90).isActive = true
         
-          headerView.bringSubviewToFront(logo)
+        headerView.bringSubviewToFront(logo)
         
         
         
@@ -1245,46 +1244,63 @@ extension Date {
 
 class VechileCurrentTime {
     
-    //timer
+    
+    
+    var labelName : UILabel = UILabel()
+    
     var timer = Timer()
     
-    @objc func updateTime(label:UILabel, time : Int, status: Int)  {
+    var time = 0
+    
+    var status = 0
+    
+    func startTimer(_ label : UILabel, _ vechTime: Int, _ Vechstatus: Int){
         
+        labelName = label
+        
+        time = vechTime
+        
+        status = Vechstatus
+        
+        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(VechileCurrentTime.action), userInfo: nil, repeats: true)
+    }
+    
+    func hide(label:UILabel){
         let label : UILabel = label
-        var time : Int = time
-        let status : Int = status
-       
         DispatchQueue.main.async {
-        label.isHidden = false
+            label.isHidden = true
         }
         
-        var b : Int
-        var a : Int
+        
+    }
+    
+    @objc func action(){
+        
+        let label = labelName
+        
+        DispatchQueue.main.async {
+            label.isHidden = false
+        }
         
         time += 1
-        a = time % 60 //Seconds
-        b = time / 60 //Minutes
+        
+        let  a = time % 60 //Seconds
+        var  b = time / 60 //Minutes
         
         if b > 59 {
             b = 0
         }
         
+        
         DispatchQueue.main.async {
-          
-            label.text = "\(b) : \(a)"
-            
+            label.text =  "\(b)  :  \(a)"
         }
         
-        colorChange(a: a, b: b, label:label, status:status)
+        colorChange(a, b, label, status)
         
-    }// End of updateTime function
+    }
     
-    
-    
-    
-//Color Change Function for the Vechniles in the queue
-    
-    func colorChange(a:Int, b:Int, label:UILabel, status:Int) {
+    func colorChange(_ a:Int, _ b:Int, _ label:UILabel, _ status:Int) {
         
         let a : Int = a
         let b : Int = b
@@ -1319,21 +1335,102 @@ class VechileCurrentTime {
                     label.backgroundColor = UIColor.red
                 }
             } //end os status == 2
-        }
+        }//End of DispatchQueue.main.async
         
         
     } // End of colour change function
     
     
-    func hide(label:UILabel){
-        let label : UILabel = label
-        DispatchQueue.main.async {
-               label.isHidden = true
-        }
-        
-    }// End of function Hide.
     
-    
+//    //timer
+//    var timer = Timer()
+//
+//    @objc func updateTime(label:UILabel, time : Int, status: Int)  {
+//
+//        let label : UILabel = label
+//        var time : Int = time
+//        let status : Int = status
+//
+//        DispatchQueue.main.async {
+//        label.isHidden = false
+//        }
+//
+//        var b : Int
+//        var a : Int
+//
+//        time += 1
+//        a = time % 60 //Seconds
+//        b = time / 60 //Minutes
+//
+//        if b > 59 {
+//            b = 0
+//        }
+//
+//        DispatchQueue.main.async {
+//
+//            label.text = "\(b) : \(a)"
+//
+//        }
+//
+//        colorChange(a: a, b: b, label:label, status:status)
+//
+//    }// End of updateTime function
+//
+//
+//
+//
+////Color Change Function for the Vechniles in the queue
+//
+//    func colorChange(a:Int, b:Int, label:UILabel, status:Int) {
+//
+//        let a : Int = a
+//        let b : Int = b
+//        let label :UILabel = label
+//        let status: Int = status
+//
+//        DispatchQueue.main.async {
+//
+//            if status == 1{
+//                if ( b == 0 && a < 45) {
+//                    label.backgroundColor = UIColor.green
+//                }
+//                else if (b == 0 && a > 45) || (b == 0 && a < 59) {
+//                    label.backgroundColor = UIColor.yellow
+//                }
+//                else if b>0 {
+//                    label.backgroundColor = UIColor.red
+//                }
+//
+//
+//            }//end of status == 1
+//
+//            else if status == 2{
+//
+//                if (b <= 1 && a < 60) || (b == 2 && a < 30) {
+//                    label.backgroundColor = UIColor.green
+//                }
+//                else if (b == 2 && a > 30) || (b == 2 && a < 59) {
+//                    label.backgroundColor = UIColor.yellow
+//                }
+//                else {
+//                    label.backgroundColor = UIColor.red
+//                }
+//            } //end os status == 2
+//        }
+//
+//
+//    } // End of colour change function
+//
+//
+//    func hide(label:UILabel){
+//        let label : UILabel = label
+//        DispatchQueue.main.async {
+//               label.isHidden = true
+//        }
+//
+//    }// End of function Hide.
+//
+//
     
     
     
@@ -1341,8 +1438,6 @@ class VechileCurrentTime {
     
     
 }// end of vechileCurrentTime class
-
-
 
 
 
@@ -1369,3 +1464,4 @@ class VechileCurrentTime {
  }
  
  */
+

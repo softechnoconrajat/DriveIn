@@ -335,7 +335,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         oQ = orderQueue
     
         if oQ.isEmpty == false{
-            vT.updateTime(label: orderTimer1, time: oQ[0], status: 1)
+           vT.updateTime(label: orderTimer1, time: oQ[0], status: 1)
+           
             
         }
         else{
@@ -345,48 +346,56 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
       
     }//End of OrderQueurArray
     
-    func deliveryQueue (deliveryQueue: Array<Int>) {
-        let dQ : Array<Int>
-        dQ = deliveryQueue
-        
-        if dQ.isEmpty == false{
-            if dQ.count == 1 {
-                
-            vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-            vT.hide(label: deliveryTimer2)
-            vT.hide(label: deliveryTimer3)
-            vT.hide(label: deliveryTimer4)
-                
-            }
-            else if dQ.count == 2 {
-                vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
-                vT.hide(label: deliveryTimer3)
-                vT.hide(label: deliveryTimer4)
-                
-            }
-            else if dQ.count == 3 {
-                vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
-                vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
-               vT.hide(label: deliveryTimer4)
-                
-            }
-            else {
-                  vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
-                  vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
-                  vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
-                  vT.updateTime(label: deliveryTimer3, time: dQ[3], status: 2)
-            }
-        }
-        else{
-            vT.hide(label: deliveryTimer1)
-            vT.hide(label: deliveryTimer2)
-            vT.hide(label: deliveryTimer3)
-            vT.hide(label: deliveryTimer2)
-        }
-        
     
+    
+    func deliveryQueue (deliveryQueue: Array<Int>) {
+        
+            let dQ : Array<Int>
+            dQ = deliveryQueue
+            
+            if dQ.isEmpty == false{
+                if dQ.count == 1 {
+                    
+                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
+                    
+                    self.vT.hide(label: self.deliveryTimer2)
+                    self.vT.hide(label: self.deliveryTimer3)
+                    self.vT.hide(label: self.deliveryTimer4)
+                    
+                }
+                else if dQ.count == 2 {
+                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
+                    vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
+                    
+                    
+                    self.vT.hide(label: self.deliveryTimer3)
+                    self.self.vT.hide(label: self.deliveryTimer4)
+                    
+                }
+                else if dQ.count == 3 {
+                                    vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
+                                    vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
+                                    vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
+                    
+                    
+                    self.vT.hide(label: self.deliveryTimer4)
+                    
+                }
+                else {
+                                      vT.updateTime(label: deliveryTimer1, time: dQ[0], status: 2)
+                                      vT.updateTime(label: deliveryTimer2, time: dQ[1], status: 2)
+                                      vT.updateTime(label: deliveryTimer3, time: dQ[2], status: 2)
+                                      vT.updateTime(label: deliveryTimer3, time: dQ[3], status: 2)
+                    
+                }
+            }
+            else{
+                self.vT.hide(label: self.deliveryTimer1)
+                self.self.vT.hide(label: self.deliveryTimer2)
+                self.self.vT.hide(label: self.deliveryTimer3)
+                self.vT.hide(label: self.deliveryTimer2)
+            }
+        
     } // End of delivery queue function
     
 

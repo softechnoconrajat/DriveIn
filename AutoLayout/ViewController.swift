@@ -248,9 +248,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     //MQTT Implementation
     
-    func mqttCall(_ restCode : Int){
+    func mqttCall(){
         
-        code = restCode
+
         let clientID = "CocoaMQTT-" + String(ProcessInfo().processIdentifier)
         let hostID = "13.126.194.18"
         
@@ -265,7 +265,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         mqttClient.connectTo(host: hostID, port: 1883, keepAlive: 2){
             result in
             if result == MosqResult.mosq_success {
-                self.pressNow(code)
+                self.pressNow()
                 
             }
             else {
@@ -287,12 +287,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if result == MosqResult.mosq_success{
                 // successful disconnection you requested
                 print("Subscribing Again")
-                self.mqttCall(code)
+                self.mqttCall()
             }
             else{
                 // other cases such as unexpected disconnection.
                 print("Abruptly Disconnected!")
-                self.mqttCall(code)
+                self.mqttCall()
             }
         } // end of disconnect
     }//End of MQTT Function
@@ -327,6 +327,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // update Time for the timer
     
+   
+    
     func orderqueue(orderQueue: Array<Int>)  {
         
         let oQ : Array<Int>
@@ -334,6 +336,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
         if oQ.isEmpty == false{
             vT.updateTime(label: orderTimer1, time: oQ[0], status: 1)
+            
         }
         else{
             
@@ -386,15 +389,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     } // End of delivery queue function
     
-    
-    
-    
 
-    
-
-    
-    
-    
 // function to update time
     
    @objc func updateSaudiTime(){
@@ -533,23 +528,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         screenWidth = screenSize.width
         screenHeight = screenSize.height
         
-        
-     
-    
         self.setupLayout()
         self.expectedTime()
         
-        //mqttCall()
-        
-        
-        
+      //  mqttCall()
         
         Timer.scheduledTimer(timeInterval: 0.10, target: self, selector: #selector(ViewController.updateSaudiTime), userInfo: nil, repeats: true)
-       
-        
-    
-        
-        
         
     }
     
@@ -987,23 +971,24 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         pr(string: dropdownList[indexPath.row])
     }
     
-    
+    var restCode = Int()
     func pr(string: String){
         
                 let (_, _, _, restDetails) = expectedTime()
-                code = restDetails[string]!
-                pressNow(code)
+               // code = restDetails[string]!
+                restCode = restDetails[string]!
+                pressNow()
     }
     
 // Function for resturents details
     
-    @objc func pressNow(_ restcode: Int) {
+    @objc func pressNow() {
         
         var orderQueueArr : Array<Int> = Array()
         var deliveryQueueArr : Array<Int> = Array()
         //        var deliveredQueueArr : Array<Int> = Array()
         
-        code = restcode
+        
         var deliveredQueueData : Int = Int()
         
         var secondsInOrder1 : Int = Int()
@@ -1011,7 +996,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
       
         
-        let parameters = ["resID": code]
+        let parameters = ["resID": restCode]
         
         guard let url = URL(string : "http://13.126.194.18:4200/api/log") else {return}
         
@@ -1284,6 +1269,8 @@ class VechileCurrentTime {
         colorChange(a: a, b: b, label:label, status:status)
         
     }// End of updateTime function
+    
+    
     
     
 //Color Change Function for the Vechniles in the queue

@@ -17,7 +17,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var screenWidth : CGFloat = 0.0
     var screenHeight : CGFloat = 0.0
     
-    var vT = VechileCurrentTime()
+ //   var vT = VechileCurrentTime()
 
    
 
@@ -302,12 +302,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let time : Int = time
         let count : Int = count
         
-        let aver : Int
+        var aver : Int = Int()
         
         var a : Int = 0
         var b : Int = 0
         
+        if count > 0 {
         aver = time/count
+        }
         
         a = aver % 60 //Seconds
         b = aver / 60 //Minutes
@@ -327,25 +329,45 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     // update Time for the timer
     
+    
+        let obj1 = VechileCurrentTime()
+        let obj2 = VechileCurrentTime()
+        let obj3 = VechileCurrentTime()
+        let obj4 = VechileCurrentTime()
+        let obj5 = VechileCurrentTime()
+    
    
     func orderqueue(orderQueue: Array<Int>)  {
         
         let oQ : Array<Int>
         oQ = orderQueue
+        
+        obj1.resetTimer(label: orderTimer1)
+        obj2.resetTimer(label: deliveryTimer1)
+        obj3.resetTimer(label: deliveryTimer1)
+        obj4.resetTimer(label: deliveryTimer1)
+        obj5.resetTimer(label: deliveryTimer1)
     
         if oQ.isEmpty == false{
-           vT.startTimer( orderTimer1, oQ[0], 1)
+          // vT.startTimer( orderTimer1, oQ[0], 1)
+          obj1.startTimer(orderTimer1, oQ[0], 1)
            
             
         }
-        else{
+       else{
             
-            vT.hide(label: orderTimer1)
+            //vT.hide(label: orderTimer1)
+            //obj1.hide(label: orderTimer1)
+//            DispatchQueue.main.async {
+//                self.orderTimer1.isHidden = true
+//            }
+            
         }
       
     }//End of OrderQueurArray
     
-    
+
+
     
     func deliveryQueue(deliveryQueue: Array<Int>) {
         
@@ -355,44 +377,87 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if dQ.isEmpty == false{
                 if dQ.count == 1 {
                     
-                    vT.startTimer( deliveryTimer1, dQ[0],  2)
+                    //vT.startTimer( deliveryTimer1, dQ[0],  2)
                     
-                    self.vT.hide(label: self.deliveryTimer2)
-                    self.vT.hide(label: self.deliveryTimer3)
-                    self.vT.hide(label: self.deliveryTimer4)
+                    obj2.startTimer(deliveryTimer1, dQ[0], 2)
+                    
+//                    vT.hide(label: deliveryTimer2)
+//                    vT.hide(label: deliveryTimer3)
+//                    vT.hide(label: deliveryTimer4)
+                    
+//                    obj3.hide(label: deliveryTimer2)
+//                    obj4.hide(label: deliveryTimer3)
+//                    obj5.hide(label: deliveryTimer4)
+                    
+//                    DispatchQueue.main.async {
+//                        self.deliveryTimer2.isHidden = true
+//                        self.deliveryTimer3.isHidden = true
+//                        self.deliveryTimer4.isHidden = true
+//                    }
+                    
                     
                 }
                 else if dQ.count == 2 {
-                    vT.startTimer(deliveryTimer1,  dQ[0], 2)
-                    vT.startTimer( deliveryTimer2, dQ[1], 2)
+//                   vT.startTimer(deliveryTimer1,  dQ[0], 2)
+//                    vT.startTimer( deliveryTimer2, dQ[1], 2)
+                    obj2.startTimer(deliveryTimer1, dQ[0], 2)
+                    obj3.startTimer(deliveryTimer2, dQ[1], 2)
+//                    vT.hide(label: deliveryTimer3)
+//                    vT.hide(label: deliveryTimer4)
+//                    obj4.hide(label: deliveryTimer3)
+//                    obj5.hide(label: deliveryTimer4)
                     
-                    
-                    self.vT.hide(label: self.deliveryTimer3)
-                    self.self.vT.hide(label: self.deliveryTimer4)
+//                    DispatchQueue.main.async {
+//                        self.deliveryTimer3.isHidden = true
+//                        self.deliveryTimer4.isHidden = true
+//                    }
                     
                 }
                 else if dQ.count == 3 {
-                                    vT.startTimer( deliveryTimer1,  dQ[0],  2)
-                                    vT.startTimer( deliveryTimer2,  dQ[1],  2)
-                                    vT.startTimer( deliveryTimer3,  dQ[2],  2)
+//                                    vT.startTimer( deliveryTimer1,  dQ[0],  2)
+//                                    vT.startTimer( deliveryTimer2,  dQ[1],  2)
+//                                    vT.startTimer( deliveryTimer3,  dQ[2],  2)
+                    obj2.startTimer(deliveryTimer1, dQ[0], 2)
+                    obj3.startTimer(deliveryTimer2, dQ[1], 2)
+                    obj4.startTimer(deliveryTimer3, dQ[2], 2)
                     
+                    // vT.hide(label: deliveryTimer4)
                     
-                    self.vT.hide(label: self.deliveryTimer4)
+//                    //obj5.hide(label: deliveryTimer4)
+//                    DispatchQueue.main.async {
+//                        self.deliveryTimer4.isHidden = true
+//                    }
                     
                 }
                 else {
-                                      vT.startTimer( deliveryTimer1,  dQ[0],  2)
-                                      vT.startTimer( deliveryTimer2,  dQ[1], 2)
-                                      vT.startTimer(deliveryTimer3,  dQ[2],  2)
-                                      vT.startTimer( deliveryTimer3,  dQ[3], 2)
+//                                      vT.startTimer( deliveryTimer1,  dQ[0],  2)
+//                                      vT.startTimer( deliveryTimer2,  dQ[1], 2)
+//                                      vT.startTimer(deliveryTimer3,  dQ[2],  2)
+//                                      vT.startTimer( deliveryTimer3,  dQ[3], 2)
+//                    obj2.startTimer(deliveryTimer1, dQ[0], 2)
+//                    obj3.startTimer(deliveryTimer2, dQ[1], 2)
+//                    obj4.startTimer(deliveryTimer3, dQ[2], 2)
+//                    obj5.startTimer(deliveryTimer4, dQ[3], 2)
                     
+//                    DispatchQueue.main.async {
+//                        self.deliveryTimer1.isHidden = true
+//                        self.deliveryTimer2.isHidden = true
+//                        self.deliveryTimer3.isHidden = true
+//                        self.deliveryTimer4.isHidden = true
+//                    }
+//
                 }
             }
             else{
-                self.vT.hide(label: self.deliveryTimer1)
-                self.self.vT.hide(label: self.deliveryTimer2)
-                self.self.vT.hide(label: self.deliveryTimer3)
-                self.vT.hide(label: self.deliveryTimer2)
+//                vT.hide(label: deliveryTimer1)
+//                vT.hide(label: deliveryTimer2)
+//                vT.hide(label: deliveryTimer3)
+//                vT.hide(label: deliveryTimer2)
+                
+//                obj3.hide(label: deliveryTimer1)
+//                obj3.hide(label: deliveryTimer2)
+//                obj4.hide(label: deliveryTimer3)
+//                obj5.hide(label: deliveryTimer4)
             }
         
     } // End of delivery queue function
@@ -537,7 +602,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         screenHeight = screenSize.height
         
         self.setupLayout()
-       // self.expectedTime()
+        self.expectedTime()
         
       //  mqttCall()
         
@@ -1194,6 +1259,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.deliveryTimer3.isHidden = true
             self.deliveryTimer4.isHidden = true
             self.averageDel.text = "0  :  0"
+            
         }
         
     }//End of Function to initilize screen at the time of each selection
@@ -1241,74 +1307,84 @@ extension Date {
     }
 }// End of Extension Date
 
+// Function to get Vechile Timer
+
+
 
 class VechileCurrentTime {
-    
-    
     
     var labelName : UILabel = UILabel()
     
     var timer = Timer()
-    
     var time = 0
-    
     var status = 0
+    
+    var isTimerRunning = false
     
     func startTimer(_ label : UILabel, _ vechTime: Int, _ Vechstatus: Int){
         
-        labelName = label
-        
-        time = vechTime
-        
-        status = Vechstatus
-        
-        timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(VechileCurrentTime.action), userInfo: nil, repeats: true)
-    }
-    
-    func hide(label:UILabel){
-        let label : UILabel = label
-        DispatchQueue.main.async {
-            label.isHidden = true
-        }
         
         
-    }
-    
-    @objc func action(){
+            labelName = label
+            time = vechTime
+            status = Vechstatus
         
-        let label = labelName
+        
         
         DispatchQueue.main.async {
-            label.isHidden = false
+            
+            if self.isTimerRunning == false {
+                
+                self.timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: #selector(VechileCurrentTime.updateTime), userInfo: nil, repeats: true)
+            }
+            
         }
         
+       
+    }
+
+    @objc func updateTime()  {
+        
+        isTimerRunning = true
+        
+        DispatchQueue.main.async {
+        self.labelName.isHidden = false
+        }
+
+        var b : Int
+        var a : Int
+
         time += 1
         
-        let  a = time % 60 //Seconds
-        var  b = time / 60 //Minutes
-        
+        a = time % 60 //Seconds
+        b = time / 60 //Minutes
+
         if b > 59 {
             b = 0
         }
-        
-        
+
         DispatchQueue.main.async {
-            label.text =  "\(b)  :  \(a)"
+
+            self.labelName.text = "\(b) : \(a)"
+
         }
-        
-        colorChange(a, b, label, status)
-        
-    }
-    
+
+        colorChange(a, b, labelName, status)
+
+    }// End of updateTime function
+
+
+//Color Change Function for the Vechniles in the queue
+
     func colorChange(_ a:Int, _ b:Int, _ label:UILabel, _ status:Int) {
-        
+
         let a : Int = a
         let b : Int = b
         let label :UILabel = label
         let status: Int = status
-        
+
         DispatchQueue.main.async {
-            
+
             if status == 1{
                 if ( b == 0 && a < 45) {
                     label.backgroundColor = UIColor.green
@@ -1319,12 +1395,12 @@ class VechileCurrentTime {
                 else if b>0 {
                     label.backgroundColor = UIColor.red
                 }
-                
-                
+
+
             }//end of status == 1
-                
+
             else if status == 2{
-                
+
                 if (b <= 1 && a < 60) || (b == 2 && a < 30) {
                     label.backgroundColor = UIColor.green
                 }
@@ -1335,108 +1411,37 @@ class VechileCurrentTime {
                     label.backgroundColor = UIColor.red
                 }
             } //end os status == 2
-        }//End of DispatchQueue.main.async
-        
-        
+        }
+
+
     } // End of colour change function
+
+
+    func hide(label:UILabel){
+        let label : UILabel = label
+        DispatchQueue.main.async {
+               label.isHidden = true
+        }
+
+    }// End of function Hide.
     
     
-    
-//    //timer
-//    var timer = Timer()
-//
-//    @objc func updateTime(label:UILabel, time : Int, status: Int)  {
-//
-//        let label : UILabel = label
-//        var time : Int = time
-//        let status : Int = status
-//
-//        DispatchQueue.main.async {
-//        label.isHidden = false
-//        }
-//
-//        var b : Int
-//        var a : Int
-//
-//        time += 1
-//        a = time % 60 //Seconds
-//        b = time / 60 //Minutes
-//
-//        if b > 59 {
-//            b = 0
-//        }
-//
-//        DispatchQueue.main.async {
-//
-//            label.text = "\(b) : \(a)"
-//
-//        }
-//
-//        colorChange(a: a, b: b, label:label, status:status)
-//
-//    }// End of updateTime function
-//
-//
-//
-//
-////Color Change Function for the Vechniles in the queue
-//
-//    func colorChange(a:Int, b:Int, label:UILabel, status:Int) {
-//
-//        let a : Int = a
-//        let b : Int = b
-//        let label :UILabel = label
-//        let status: Int = status
-//
-//        DispatchQueue.main.async {
-//
-//            if status == 1{
-//                if ( b == 0 && a < 45) {
-//                    label.backgroundColor = UIColor.green
-//                }
-//                else if (b == 0 && a > 45) || (b == 0 && a < 59) {
-//                    label.backgroundColor = UIColor.yellow
-//                }
-//                else if b>0 {
-//                    label.backgroundColor = UIColor.red
-//                }
-//
-//
-//            }//end of status == 1
-//
-//            else if status == 2{
-//
-//                if (b <= 1 && a < 60) || (b == 2 && a < 30) {
-//                    label.backgroundColor = UIColor.green
-//                }
-//                else if (b == 2 && a > 30) || (b == 2 && a < 59) {
-//                    label.backgroundColor = UIColor.yellow
-//                }
-//                else {
-//                    label.backgroundColor = UIColor.red
-//                }
-//            } //end os status == 2
-//        }
-//
-//
-//    } // End of colour change function
-//
-//
-//    func hide(label:UILabel){
-//        let label : UILabel = label
-//        DispatchQueue.main.async {
-//               label.isHidden = true
-//        }
-//
-//    }// End of function Hide.
-//
-//
-    
-    
-    
-    
-    
-    
+    func resetTimer(label: UILabel){
+       
+        timer.invalidate()
+        self.time = 0   //Here we manually enter the restarting point for the seconds, but it would be wiser to make this a variable or constant
+        
+        DispatchQueue.main.async {
+            label.text =  String(self.time)
+            label.isHidden = true
+        }
+        
+        
+        isTimerRunning = false
+        
+        
+    }
+
 }// end of vechileCurrentTime class
 
 

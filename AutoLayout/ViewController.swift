@@ -19,13 +19,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
  //   var vT = VechileCurrentTime()
 
-   
-
-    
-    
-    //initializing variable
-    
-    
     
     // {} is referred to as closure, or anon. function
     
@@ -226,109 +219,87 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     var tableViews = UITableView()
     
     
-    
-    
-    
-   
-    
-    
-//
-//    let pressHere : UIButton = {
-//        let button = UIButton(type: .system)
-//        button.setTitle("Restaurants", for: .normal)
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-//       // button.addTarget(self, action: #selector(pressNow), for: .touchUpInside)
-//        button.backgroundColor = UIColor.black
-//        return button
-//    }()
-    
-    
-    
-    
     //MQTT Implementation
+    
+    var pr = false
+    var n = 2
     
     func mqttCall(){
         
-
-        let clientID = "CocoaMQTT-" + String(ProcessInfo().processIdentifier)
-        let hostID = "13.126.194.18"
-        
-        let mqttConfig = MQTTConfig(clientId: clientID, host: hostID, port: 1883, keepAlive: 60)
+        // set MQTT Client Configuration
+        let mqttConfig = MQTTConfig(clientId: "CocoaMQTT-" + String(ProcessInfo().processIdentifier), host: "13.126.194.18", port: 1883, keepAlive: 60)
+        mqttConfig.onConnectCallback = { returnCode in
+            NSLog("Return Code is \(returnCode.description)")
+        }
+        mqttConfig.onMessageCallback = { mqttMessage in
+            self.pressNow()
+        }
         
         // create new MQTT Connection
-        //       let mqttClient = MQTT.newConnection(mqttConfig)
-        //
+        let mqttClient = MQTT.newConnection(mqttConfig)
         
-        
-        let mqttClient = MQTT.newConnection(mqttConfig, connectImmediately: false)
-        mqttClient.connectTo(host: hostID, port: 1883, keepAlive: 2){
-            result in
-            if result == MosqResult.mosq_success {
-                self.pressNow()
-                
-            }
-            else {
-                // error handling for connection failure
-                print("Not sucessfully Connected!")
-            }
-            
-            
-        }
-        
+        // subscribe
         mqttClient.subscribe("world", qos: 2) { (messageId, grantedQos) in
-            NSLog("subscribed (mid=\(messageId),grantedQos=\(grantedQos))")
-        }
+                        NSLog("subscribed (mid=\(messageId),grantedQos=\(grantedQos))")
+            
+                        while self.pr == false{
+                            for var i in 2..<self.n {
+                            i += 1
+                            self.pr == true
+            
+                            }
+            
+                        }
+                    }
         
-        
-        
-        
+        // disconnect
         mqttClient.disconnect {  result in
-            if result == MosqResult.mosq_success{
-                // successful disconnection you requested
-                print("Subscribing Again")
-                self.mqttCall()
-            }
-            else{
-                // other cases such as unexpected disconnection.
-                print("Abruptly Disconnected!")
-                self.mqttCall()
-            }
-        } // end of disconnect
-    }//End of MQTT Function
-
+                        if result == MosqResult.mosq_success{
+                            // successful disconnection you requested
+                            print("Subscribing Again")
+                            self.mqttCall()
+                        }
+                        else{
+                            // other cases such as unexpected disconnection.
+                            print("Abruptly Disconnected!")
+                            self.mqttCall()
+                        }
+                    } // end of disconnect
+    }
     
     func averagePerformance(time: Int, count: Int){
         let time : Int = time
-        let count : Int = count
+        let countVech : Int = count
         
         var aver : Int = Int()
         
         var a : Int = 0
         var b : Int = 0
         
-        if count > 0 {
-        aver = time/count
+        
+        if countVech == 0{
+            print(Error.self)
         }
-        
-        a = aver % 60 //Seconds
-        b = aver / 60 //Minutes
-        
-        if b > 59 {
-            b = 0
-        }
-        
-        DispatchQueue.main.async {
+        else{
+            aver =  (time/countVech)
+            a = aver % 60 //Seconds
+            b = aver / 60 //Minutes
             
-            self.averageDel.text = "\(b)  :  \(a)"
+            if b > 59 {
+                b = 0
+            }
             
-        }
-        
+            DispatchQueue.main.async {
+                
+                self.averageDel.text = "\(b)  :  \(a)"
+                
+            }//End of DispatchQueue
+            
+        }// End of Else Statement
     
 }//End of average Performance
     
     // update Time for the timer
-    
     
         let obj1 = VechileCurrentTime()
         let obj2 = VechileCurrentTime()
@@ -342,122 +313,68 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let oQ : Array<Int>
         oQ = orderQueue
         
+        
         obj1.resetTimer(label: orderTimer1)
-        obj2.resetTimer(label: deliveryTimer1)
-        obj3.resetTimer(label: deliveryTimer1)
-        obj4.resetTimer(label: deliveryTimer1)
-        obj5.resetTimer(label: deliveryTimer1)
+//        obj2.resetTimer(label: deliveryTimer1)
+//        obj3.resetTimer(label: deliveryTimer2)
+//        obj4.resetTimer(label: deliveryTimer3)
+//        obj5.resetTimer(label: deliveryTimer4)
     
         if oQ.isEmpty == false{
-          // vT.startTimer( orderTimer1, oQ[0], 1)
+        
           obj1.startTimer(orderTimer1, oQ[0], 1)
            
             
         }
        else{
             
-            //vT.hide(label: orderTimer1)
-            //obj1.hide(label: orderTimer1)
-//            DispatchQueue.main.async {
-//                self.orderTimer1.isHidden = true
-//            }
-            
+            obj1.resetTimer(label: orderTimer1)
+           
         }
       
     }//End of OrderQueurArray
-    
-
-
     
     func deliveryQueue(deliveryQueue: Array<Int>) {
         
             let dQ : Array<Int>
             dQ = deliveryQueue
+        
+            obj2.resetTimer(label: deliveryTimer1)
+            obj3.resetTimer(label: deliveryTimer2)
+            obj4.resetTimer(label: deliveryTimer3)
+            obj5.resetTimer(label: deliveryTimer4)
+        
             
             if dQ.isEmpty == false{
                 if dQ.count == 1 {
-                    
-                    //vT.startTimer( deliveryTimer1, dQ[0],  2)
-                    
+    
                     obj2.startTimer(deliveryTimer1, dQ[0], 2)
-                    
-//                    vT.hide(label: deliveryTimer2)
-//                    vT.hide(label: deliveryTimer3)
-//                    vT.hide(label: deliveryTimer4)
-                    
-//                    obj3.hide(label: deliveryTimer2)
-//                    obj4.hide(label: deliveryTimer3)
-//                    obj5.hide(label: deliveryTimer4)
-                    
-//                    DispatchQueue.main.async {
-//                        self.deliveryTimer2.isHidden = true
-//                        self.deliveryTimer3.isHidden = true
-//                        self.deliveryTimer4.isHidden = true
-//                    }
-                    
-                    
+                
                 }
                 else if dQ.count == 2 {
-//                   vT.startTimer(deliveryTimer1,  dQ[0], 2)
-//                    vT.startTimer( deliveryTimer2, dQ[1], 2)
+
                     obj2.startTimer(deliveryTimer1, dQ[0], 2)
                     obj3.startTimer(deliveryTimer2, dQ[1], 2)
-//                    vT.hide(label: deliveryTimer3)
-//                    vT.hide(label: deliveryTimer4)
-//                    obj4.hide(label: deliveryTimer3)
-//                    obj5.hide(label: deliveryTimer4)
-                    
-//                    DispatchQueue.main.async {
-//                        self.deliveryTimer3.isHidden = true
-//                        self.deliveryTimer4.isHidden = true
-//                    }
+
                     
                 }
                 else if dQ.count == 3 {
-//                                    vT.startTimer( deliveryTimer1,  dQ[0],  2)
-//                                    vT.startTimer( deliveryTimer2,  dQ[1],  2)
-//                                    vT.startTimer( deliveryTimer3,  dQ[2],  2)
+
                     obj2.startTimer(deliveryTimer1, dQ[0], 2)
                     obj3.startTimer(deliveryTimer2, dQ[1], 2)
                     obj4.startTimer(deliveryTimer3, dQ[2], 2)
-                    
-                    // vT.hide(label: deliveryTimer4)
-                    
-//                    //obj5.hide(label: deliveryTimer4)
-//                    DispatchQueue.main.async {
-//                        self.deliveryTimer4.isHidden = true
-//                    }
-                    
                 }
-                else {
-//                                      vT.startTimer( deliveryTimer1,  dQ[0],  2)
-//                                      vT.startTimer( deliveryTimer2,  dQ[1], 2)
-//                                      vT.startTimer(deliveryTimer3,  dQ[2],  2)
-//                                      vT.startTimer( deliveryTimer3,  dQ[3], 2)
-//                    obj2.startTimer(deliveryTimer1, dQ[0], 2)
-//                    obj3.startTimer(deliveryTimer2, dQ[1], 2)
-//                    obj4.startTimer(deliveryTimer3, dQ[2], 2)
-//                    obj5.startTimer(deliveryTimer4, dQ[3], 2)
-                    
-//                    DispatchQueue.main.async {
-//                        self.deliveryTimer1.isHidden = true
-//                        self.deliveryTimer2.isHidden = true
-//                        self.deliveryTimer3.isHidden = true
-//                        self.deliveryTimer4.isHidden = true
-//                    }
-//
-                }
+            
             }
-            else{
-//                vT.hide(label: deliveryTimer1)
-//                vT.hide(label: deliveryTimer2)
-//                vT.hide(label: deliveryTimer3)
-//                vT.hide(label: deliveryTimer2)
+            
+            // Else if Empty.
                 
-//                obj3.hide(label: deliveryTimer1)
-//                obj3.hide(label: deliveryTimer2)
-//                obj4.hide(label: deliveryTimer3)
-//                obj5.hide(label: deliveryTimer4)
+            else{
+                obj2.resetTimer(label: deliveryTimer1)
+                obj3.resetTimer(label: deliveryTimer2)
+                obj4.resetTimer(label: deliveryTimer3)
+                obj5.resetTimer(label: deliveryTimer4)
+//
             }
         
     } // End of delivery queue function
@@ -480,27 +397,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 
     } //End of function updateTime.
 
-    
-    
-    
-    
-    
-    
-
-    
-//
-//    func abc () {
-//
-//       // var x = expectedTime()
-//
-//        let (x, y, z) = expectedTime()
-//        print(x[0])
-//        print(y[0])
-//        print(z[0])
-//
-//    }
-//
-    
     // Variable Declaration for Expected Time eT, Maximum Interval, and Order Queue
     
     var a : [Int] = []
@@ -559,19 +455,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                                 rest_name = restName
                                 dropDownOption += [restName]
                             }
-                            
-                            
-                            // button.dropView.dropDownOptions = dropDownOption
+                            // DropDownList
                              dropdownList = dropDownOption
-                            
-                            
                         }
-                        
                         restDetails[rest_name] = rest_Id
-                        
                     }
                 }
-                
                 
             }//end of Array Loop
             
@@ -582,9 +471,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
         return (a,b,c, restDetails )
     }//End of function to calculate expected Time
-    
-    
-
     
     
     var flag = 0
@@ -604,13 +490,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         self.setupLayout()
         self.expectedTime()
         
-      //  mqttCall()
+        self.mqttCall()
         
         Timer.scheduledTimer(timeInterval: 0.10, target: self, selector: #selector(ViewController.updateSaudiTime), userInfo: nil, repeats: true)
         
     }
-    
-    
     
     // Layout of the views
     
@@ -632,8 +516,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         headerView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.12).isActive = true
         
         
-        
-        
          headerView.addSubview(logo)
         
          logo.topAnchor.constraint(equalTo: headerView.topAnchor, constant:11).isActive = true
@@ -642,8 +524,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
          logo.heightAnchor.constraint(equalTo: headerView.heightAnchor, multiplier: 0.90).isActive = true
         
         headerView.bringSubviewToFront(logo)
-        
-        
         
         // Contenet of header conatainer
 //        headerView.addSubview(headLabel)
@@ -657,7 +537,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 //        headLabel.textColor = UIColor.white
 //        headLabel.backgroundColor = UIColor.yellow
 //
-        
         
        // Day Time Label
         
@@ -1056,7 +935,8 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 // Function for resturents details
     
     @objc func pressNow() {
-        
+    
+    
         var orderQueueArr : Array<Int> = Array()
         var deliveryQueueArr : Array<Int> = Array()
         //        var deliveredQueueArr : Array<Int> = Array()
@@ -1084,17 +964,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         request.httpBody = httpBody
         let session = URLSession.shared
         session.dataTask(with: request) { (data, response, error) in
-            //            if let response = response {
-            //                //print(response)
-            //            }
+//                        if let response = response {
+//                            print(response)
+//                        }
             if let data = data{
                     
-                if data.isEmpty == false{
+               // if data.isEmpty == false
+                
                 do{
                     let json = try JSONSerialization.jsonObject(with: data, options:.mutableContainers)
+                          self.initScreen()
                     
                     if let array = json as? [String:Any] {
-                        self.initScreen()
+                    
+                    if let code = array["code"] as? Int {
+                            print("code: \(code)")
+                        
+                              self.initScreen()
+                        }
+                        
+                        
+                        else{
                         if let code = array["log"] as? [Any]{
                             var x = 0
                             var y = 0
@@ -1103,116 +993,116 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             let dateFormatter = DateFormatter()
                             var stringToDate : Date
                             
+                            
+                            
+                            
+                            
                             for user in code{
-                
-                            if let userDict = user as? [String:Any] {
-                                    
-                            if let status = userDict["status"] as? Int {
-                            if status == 1 {
-                                            
-                                if let orderQueData = userDict["passage_queue"] as? String {
-                                                
-                                //Calculate current Saudi Time
-                                                
-                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
-                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
-                                                
-                                                
-                                //Differenece in Time
-                                                
-                                stringToDate = dateFormatter.date(from: orderQueData)!
-                                var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
-                                                
-                                orderQueueArr += [secondsInOrder]
-                                                
-                                }//End of Order Queue Loop
-                                            
-                                x = x+1
-                                            
-                                } // End of Status == 1 Loop
-                                            
-                                else if status == 2 {
-                                            
-                                if let deliveryQueData = userDict["order_queue"] as? String {
-                                                
-                                //calculate Current saudi Time
-                                                
-                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
-                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
-                                                
-                                                
-                                                
-                                //difference in Time
-                                                
-                                stringToDate = dateFormatter.date(from: deliveryQueData)!
                                 
-                                // return Seconds In Delivery Queue return Type Int
-                                let secondsInDelivery = date.seconds(from: stringToDate)
+                                
+                                
+                                if let userDict = user as? [String:Any] {
                                     
-                                                
-                                                
-                                // self.updateVechileTimer(sec: secondsInDelivery, stat: status)
-                                                
-                                deliveryQueueArr += [secondsInDelivery]
-                                                
-                                                
-                                                
-                                }//End of delivery Queue Data
+                                    
+                                    if let status = userDict["status"] as? Int {
+                                        if status == 1 {
                                             
-                                y = y + 1
-                                            
-                                } // End of Status == 2 Loop
-                                            
-                                else if status == 3 {
-                                            
-                                            
-                                    if let deliveredQueData = userDict["delivery_queue"] as? String {
-                                                
-                                        //Calculate current Saudi Time
-                                                
-                                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
-                                        dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
-                                                
-                                                
-                                        //Differenece in Time
-                                                
-                                        stringToDate = dateFormatter.date(from: deliveredQueData)!
-                                        var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
-                                                
-                                        //deliveredQueueArr += [secondsInOrder]
-                                        secondsInOrder1 = secondsInOrder
-                                                
-                                                
-                                        }//End of Order Queue Loop
-                                            
-                                    if let orderQueData = userDict["passage_queue"] as? String {
+                                            if let orderQueData = userDict["passage_queue"] as? String {
                                                 
                                                 //Calculate current Saudi Time
                                                 
-                                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
-                                        dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+                                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+                                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
                                                 
                                                 
                                                 //Differenece in Time
                                                 
-                                        stringToDate = dateFormatter.date(from: orderQueData)!
-                                        var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+                                                stringToDate = dateFormatter.date(from: orderQueData)!
+                                                var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
                                                 
-                                        secondsInOrder2 = secondsInOrder
+                                                orderQueueArr += [secondsInOrder]
                                                 
-                                        // orderQueueArr += [secondsInOrder]
+                                            }//End of Order Queue Loop
+                                            
+                                            x = x+1
+                                            
+                                        } // End of Status == 1 Loop
+                                            
+                                        else if status == 2 {
+                                            
+                                            if let deliveryQueData = userDict["order_queue"] as? String {
                                                 
-                                        }//End of PassageQueue Data
+                                                //calculate Current saudi Time
+                                                
+                                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+                                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+                                                
+                                                
+                                                
+                                                //difference in Time
+                                                
+                                                stringToDate = dateFormatter.date(from: deliveryQueData)!
+                                                
+                                                // return Seconds In Delivery Queue return Type Int
+                                                let secondsInDelivery = date.seconds(from: stringToDate)
+                                                
+                                                
+                                                
+                                                // self.updateVechileTimer(sec: secondsInDelivery, stat: status)
+                                                
+                                                deliveryQueueArr += [secondsInDelivery]
+                                                
+                                                
+                                                
+                                            }//End of delivery Queue Data
                                             
-                                        deliveredQueueData += secondsInOrder2 - secondsInOrder1
+                                            y = y + 1
+                                            
+                                        } // End of Status == 2 Loop
+                                            
+                                        else if status == 3 {
                                             
                                             
-                                        z = z + 1
+                                            if let deliveredQueData = userDict["delivery_queue"] as? String {
+                                                
+                                                //Calculate current Saudi Time
+                                                
+                                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+                                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+                                                
+                                                
+                                                //Differenece in Time
+                                                
+                                                stringToDate = dateFormatter.date(from: deliveredQueData)!
+                                                var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+                                                
+                                                //deliveredQueueArr += [secondsInOrder]
+                                                secondsInOrder1 = secondsInOrder
+                                                
+                                                
+                                            }//End of Order Queue Loop
                                             
-                                    }//end of status == 3 Loop
-                                        
+                                            if let orderQueData = userDict["passage_queue"] as? String {
+                                                
+                                                //Calculate current Saudi Time
+                                                
+                                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+                                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+                                                
+                                                
+                                                //Differenece in Time
+                                                
+                                                stringToDate = dateFormatter.date(from: orderQueData)!
+                                                var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+                                                
+                                                secondsInOrder2 = secondsInOrder
+                                            }//End of PassageQueue Data
+                                            
+                                            deliveredQueueData += secondsInOrder2 - secondsInOrder1
+                                            z = z + 1
+                                            
+                                        }//end of status == 3 Loop
                                     } //end of for user Loop
-                             
                                 }//End of Status Loop
                             } //End of UserDict Loop
                             DispatchQueue.main.async {
@@ -1224,27 +1114,156 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
                             self.orderqueue(orderQueue: orderQueueArr)
                             self.deliveryQueue(deliveryQueue: deliveryQueueArr)
                             self.averagePerformance(time: deliveredQueueData, count: z)
-                            
-                            
                         } //end of do
-    
-                    }//End of "Code" Loop
-                
-                }//End of "Array" Loop
+                        }//End of "Code" Loop
+                        } // End of Else for No code == 204
+                        
+//                        if let code = array["log"] as? [Any]{
+//                            var x = 0
+//                            var y = 0
+//                            var z = 0
+//                            let date = Date()
+//                            let dateFormatter = DateFormatter()
+//                            var stringToDate : Date
+//
+//
+//
+//
+//
+//                            for user in code{
+//
+//
+//
+//                            if let userDict = user as? [String:Any] {
+//
+//
+//                            if let status = userDict["status"] as? Int {
+//                            if status == 1 {
+//
+//                                if let orderQueData = userDict["passage_queue"] as? String {
+//
+//                                //Calculate current Saudi Time
+//
+//                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+//                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+//
+//
+//                                //Differenece in Time
+//
+//                                stringToDate = dateFormatter.date(from: orderQueData)!
+//                                var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+//
+//                                orderQueueArr += [secondsInOrder]
+//
+//                                }//End of Order Queue Loop
+//
+//                                x = x+1
+//
+//                                } // End of Status == 1 Loop
+//
+//                                else if status == 2 {
+//
+//                                if let deliveryQueData = userDict["order_queue"] as? String {
+//
+//                                //calculate Current saudi Time
+//
+//                                dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+//                                dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+//
+//
+//
+//                                //difference in Time
+//
+//                                stringToDate = dateFormatter.date(from: deliveryQueData)!
+//
+//                                // return Seconds In Delivery Queue return Type Int
+//                                let secondsInDelivery = date.seconds(from: stringToDate)
+//
+//
+//
+//                                // self.updateVechileTimer(sec: secondsInDelivery, stat: status)
+//
+//                                deliveryQueueArr += [secondsInDelivery]
+//
+//
+//
+//                                }//End of delivery Queue Data
+//
+//                                y = y + 1
+//
+//                                } // End of Status == 2 Loop
+//
+//                                else if status == 3 {
+//
+//
+//                                    if let deliveredQueData = userDict["delivery_queue"] as? String {
+//
+//                                        //Calculate current Saudi Time
+//
+//                                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+//                                        dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+//
+//
+//                                        //Differenece in Time
+//
+//                                        stringToDate = dateFormatter.date(from: deliveredQueData)!
+//                                        var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+//
+//                                        //deliveredQueueArr += [secondsInOrder]
+//                                        secondsInOrder1 = secondsInOrder
+//
+//
+//                                        }//End of Order Queue Loop
+//
+//                                    if let orderQueData = userDict["passage_queue"] as? String {
+//
+//                                                //Calculate current Saudi Time
+//
+//                                        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.000'Z'"
+//                                        dateFormatter.timeZone = TimeZone.init(identifier: "Asia/Riyadh")
+//
+//
+//                                                //Differenece in Time
+//
+//                                        stringToDate = dateFormatter.date(from: orderQueData)!
+//                                        var secondsInOrder = date.seconds(from: stringToDate) // return Seconds In Order Queue return Type Int
+//
+//                                        secondsInOrder2 = secondsInOrder
+//                                        }//End of PassageQueue Data
+//
+//                                        deliveredQueueData += secondsInOrder2 - secondsInOrder1
+//                                        z = z + 1
+//
+//                                    }//end of status == 3 Loop
+//                                    } //end of for user Loop
+//                                }//End of Status Loop
+//                            } //End of UserDict Loop
+//                            DispatchQueue.main.async {
+//                                self.orderData.text = String(x)
+//                                self.deliveryData.text = String(y)
+//                                self.deliveredData.text = String(z)
+//
+//                            }
+//                            self.orderqueue(orderQueue: orderQueueArr)
+//                            self.deliveryQueue(deliveryQueue: deliveryQueueArr)
+//                            self.averagePerformance(time: deliveredQueueData, count: z)
+//                        } //end of do
+//                    }//End of "Code" Loop
                     
+                }//End of "Array" Loop
+                
                 catch{
                     print(error)
-                } //end of catch
-                    
-            }//End of If Empty Startement
-            else{
-                print("empty data")
-            }
+                }//end of catch
+             
+           // }//End of If Empty Startement
+//            else{
+//                print("empty data")
+//            }
             }// end of data task
-        
         }.resume()//end of seesion.datatask
-      
     } // End of Fuction to bring resturents data
+    
     
     
     //Function to initilize screen at the time of each selection
@@ -1314,6 +1333,7 @@ extension Date {
 class VechileCurrentTime {
     
     var labelName : UILabel = UILabel()
+   
     
     var timer = Timer()
     var time = 0
@@ -1323,12 +1343,9 @@ class VechileCurrentTime {
     
     func startTimer(_ label : UILabel, _ vechTime: Int, _ Vechstatus: Int){
         
-        
-        
             labelName = label
             time = vechTime
             status = Vechstatus
-        
         
         
         DispatchQueue.main.async {
@@ -1411,9 +1428,7 @@ class VechileCurrentTime {
                     label.backgroundColor = UIColor.red
                 }
             } //end os status == 2
-        }
-
-
+        } // End of Dispatch.main.async Function
     } // End of colour change function
 
 
@@ -1432,41 +1447,17 @@ class VechileCurrentTime {
         self.time = 0   //Here we manually enter the restarting point for the seconds, but it would be wiser to make this a variable or constant
         
         DispatchQueue.main.async {
-            label.text =  String(self.time)
+          //  label.text =  String(self.time)
+            
+            label.text =  String(0)
             label.isHidden = true
         }
         
         
         isTimerRunning = false
         
-        
     }
 
 }// end of vechileCurrentTime class
 
-
-
-
-
-/*
- 
-
- //Variable decleration
- 
- var timer = Timer()
- 
- override func viewDidLoad() {
- super.viewDidLoad()
- 
- timeStart()
- 
- setupLayout()
- 
- }
- 
- func timeStart(){
- timer = Timer.scheduledTimer(timeInterval: 1.0, target: self, selector: (#selector(ViewController.updateTime)), userInfo: nil, repeats: true)
- }
- 
- */
 
